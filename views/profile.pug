@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    h1 Hallo #{firstname}
+    
+    .user-detail
+        p #{firstname + " " + lastname}
+        p #{username}
+        p #{data.msg_count}
+
+    a.btn.btn-primary(href="/catalog/" + id + "/newmsg") New MSG
+
+    p #[strong Your last messages]
+        each messages in data.msg
+          .list-group.mb-1
+            .list-group-item.list-group-item-action.flex-column.align-items-start
+              .d-flex.w-100.justify-content-between
+                h5.mb-1.text-info !{messages.title}
+                p.mb-1 !{messages.content}
+                small.text-info !{messages.date}
+              small.text-muted You created this message
+
+                        
+

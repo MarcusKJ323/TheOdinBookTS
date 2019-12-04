@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  h1= title
+  
+  p Welcome to #{title}
+  //- p #{data.comments}
+  p #{data.comments.author}
+
+
+    each messages in data.id
+      .list-group.mb-1
+       .list-group-item.list-group-item-action.flex-column.align-items-start
+        .d-flex.w-100.justify-content-between
+          h3.mb-1.text-info !{messages.title}
+          p.mb-1 !{messages.content}
+          small.text-info !{messages.author.username}
+          p #{messages.id}
+          if(currentUser)
+            form(method='POST' action=('/catalog/comment/' + messages.id))
+              .form-group
+                label(for="comment") Comment: 
+                input#comment.form-control(type="text", placeholder="Your comment" name="comment" value=(undefined===comment ? "" : comment.comment))
+              button.btn.btn-success(type="submit") Sumbit
+          else
+            p you need to be loged in to write a comment
+          each comment in data.comments
+            if (comment.to == messages.id)
+              p #{comment.comment}
+        small.text.info !{messages.date}
+  

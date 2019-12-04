@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1= title
+
+
+    form(method="post" action="")
+        .form-group
+            label(for="title") Title:
+            input#title.form-control( type="text", placeholder="Title" name="title" required="true" value=(undefined===message ? "" : message.title))
+        .form-group
+            label(for="content") Content:
+            input#content.form-control(type="text" placeholder="content" name="content" required="true" value=(undefined===message ? "" : message.content))
+
+        button.btn.btn-primary(type="submit") Submit
