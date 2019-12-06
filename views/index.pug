@@ -5,10 +5,11 @@ block content
   
   p Welcome to #{title}
   //- p #{data.comments}
-  p #{data.comments.author}
+  //- p #{data.id}
+  p #{currentUser.likes}
 
-
-    each messages in data.id
+  
+  each messages in data.id
       .list-group.mb-1
        .list-group-item.list-group-item-action.flex-column.align-items-start
         .d-flex.w-100.justify-content-between
@@ -17,6 +18,19 @@ block content
           small.text-info !{messages.author.username}
           p #{messages.id}
           if(currentUser)
+            //- -var results = 0
+            //- each val in currentUser.likes
+            //-   -console.log(val)
+            //-   if (val == messages.id)
+            //-     - const liked = true
+            //-     - console.log(liked)
+            //-   else
+            //-     - const liked = false
+            //-     - console.log(liked)
+            form(method='POST' action=('/catalog/post/' +  messages.id + '/upvote'))
+              button.btn.btn-primary(type="text") Like
+            - console.log(messages )
+            p #{likes}
             form(method='POST' action=('/catalog/comment/' + messages.id))
               .form-group
                 label(for="comment") Comment: 
@@ -27,5 +41,6 @@ block content
           each comment in data.comments
             if (comment.to == messages.id)
               p #{comment.comment}
+              //- p #{comment.date}
         small.text.info !{messages.date}
   

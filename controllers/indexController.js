@@ -2,6 +2,7 @@ const { check, validationResult, sanitizeBody } = require("express-validator");
 const User = require("../models/User");
 const Messages = require("../models/Message");
 const Comments = require("../models/Comment");
+const Likes = require("../models/Like");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const async = require("async");
@@ -22,16 +23,21 @@ exports.index = (req, res) => {
       },
       comments: callback => {
         Comments.find({}, callback);
+      },
+      likes: callback => {
+        Likes.find({}, callback);
       }
     },
 
     (err, results) => {
+      console.log(results.likes.likes);
       if (err) throw err;
       res.render("index", {
         data: results,
         messageid: results.id,
         user: req.user,
-        title: "Message Board"
+        title: "Message Board",
+        likes: results.likes.likes
       });
     }
   );

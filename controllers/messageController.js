@@ -1,5 +1,6 @@
 const { check, validationResult, sanitizeBody } = require("express-validator");
 const User = require("../models/User");
+const Like = require("../models/Like");
 const Message = require("../models/Message");
 
 exports.newmsg_get = (req, res) => {
@@ -31,7 +32,12 @@ exports.newmsg_post = [
       content: req.body.content,
       author: req.params.id
     });
-
+    console.log(message.id);
+    const likes = new Like({
+      author: req.params.id,
+      post: message.id,
+      likes: 0
+    });
     if (!errors.isEmpty()) {
       //There are errors.Render again
       res.render("newmsg", {
@@ -47,6 +53,11 @@ exports.newmsg_post = [
           return next(err);
         }
         res.redirect("/catalog/profile/" + req.params.id);
+      });
+      likes.save(err => {
+        if (err) {
+          return next(err);
+        }
       });
     }
   }

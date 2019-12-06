@@ -39,6 +39,8 @@ router.post("/:id/newmsg", message_controller.newmsg_post);
 
 router.post("/comment/:id", comment_controller.newcom_post);
 
+router.post("/post/:id/upvote", like_controller.like_post);
+
 router.get("/profile/:id", index_controller.profile_get);
 
 router.get("/logout", (req, res) => {

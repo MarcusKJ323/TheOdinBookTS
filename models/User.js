@@ -20,7 +20,8 @@ const UserSchema = new Schema({
   },
   password: { type: String, min: 6 },
   messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
-  friend: { type: Schema.Types.ObjectId, ref: "Friend" }
+  friend: [{ type: Schema.Types.ObjectId, ref: "Friend" }],
+  likes: [{ type: Schema.Types.ObjectId, ref: "Like" }]
 });
 
 //Virtuals

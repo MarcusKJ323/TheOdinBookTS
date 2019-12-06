@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 
 //Create the Likes model
 const LikeSchema = new Schema({
-  likers: { type: Schema.Types.ObjectId, ref: "User" }
+  author: { type: Schema.Types.ObjectId, ref: "User" },
+  post: { type: Schema.Types.ObjectId, ref: "Comment" },
+  likes: { type: Number }
 });
 
 module.exports = mongoose.model("Like", LikeSchema);
