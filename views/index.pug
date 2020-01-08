@@ -7,6 +7,8 @@ block content
   //- p #{data.comments}
   //- p #{data.id}
   p #{currentUser.likes}
+  -console.log(data)
+  
 
   
   each messages in data.id
@@ -29,8 +31,8 @@ block content
             //-     - console.log(liked)
             form(method='POST' action=('/catalog/post/' +  messages.id + '/upvote'))
               button.btn.btn-primary(type="text") Like
-            - console.log(messages )
-            p #{likes}
+            //- console.log(messages)
+            p #{messages.likes}
             form(method='POST' action=('/catalog/comment/' + messages.id))
               .form-group
                 label(for="comment") Comment: 

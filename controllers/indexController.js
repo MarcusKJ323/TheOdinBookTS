@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 const async = require("async");
 require("dotenv").config();
 
-//get homepage
+//get index
 exports.index = (req, res) => {
   async.parallel(
     {
@@ -16,10 +16,14 @@ exports.index = (req, res) => {
         User.find({}, { _id: 0, __v: 0 }, callback).populate("messages");
       },
       allMessages: callback => {
-        Messages.find({}, { _id: 0, __v: 0 }, callback).populate("author");
+        Messages.find({}, { _id: 0, __v: 0 }, callback)
+          .populate("author")
+          .populate("likes");
       },
       id: callback => {
-        Messages.find({}, callback).populate("author");
+        Messages.find({}, callback)
+          .populate("author")
+          .populate("likes");
       },
       comments: callback => {
         Comments.find({}, callback);

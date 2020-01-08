@@ -6,6 +6,7 @@ const Likes = require("../models/Like");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const async = require("async");
+var count = 0;
 
 exports.like_post = [
   (req, res, next) => {
@@ -27,23 +28,30 @@ exports.like_post = [
         }
       },
       (err, results) => {
-        console.log(results.iflike);
+        console.log(req.params.id);
+        console.log(req.user.id);
+
         // console.log(req.params.id);
         // console.log(results.liker);
         // console.log(results.liker == req.params.id);
         // console.log(results.savelike);
         // console.log(results.iflike[0]._id);
         results.liker.forEach(element => {
-          console.log(element);
-          console.log(element.post == req.params.id);
+          //console.log(element);
           if (element.post == req.params.id) {
-            if (
-              req.user.likes.forEach(like => {
-                like.post == req.params.id;
-              })
-            ) {
-              // console.log("hallo");
+            //console.log(req.user.likes);
+            count = 0;
+            req.user.likes.forEach(like => {
+              console.log(like == req.params.id);
+              if (like == req.params.id) {
+                count++;
+              }
+            });
+            console.log(count);
+            console.log(count >= 1);
+            if (count >= 1) {
             } else {
+              console.log;
               Likes.findByIdAndUpdate(
                 element._id,
                 { $inc: { likes: 1 } },

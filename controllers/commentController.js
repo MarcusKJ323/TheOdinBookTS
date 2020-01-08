@@ -10,7 +10,7 @@ exports.newcom_post = [
     .isLength({ min: 1, max: 500 })
     .trim(),
 
-  sanitizeBody("c**").escape(),
+  sanitizeBody("*").escape(),
 
   (req, res, next) => {
     //sperate Errors from req
