@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const router = express.Router();
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -18,6 +19,11 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 require("./config/passport");
+
+router.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
 
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());

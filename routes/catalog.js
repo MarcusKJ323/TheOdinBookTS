@@ -8,7 +8,7 @@ const like_controller = require("../controllers/likeController");
 const friend_controller = require("../controllers/friendController");
 const comment_controller = require("../controllers/commentController");
 
-router.use((req, res, next) => {
+router.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   next();
 });

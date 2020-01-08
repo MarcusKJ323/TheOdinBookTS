@@ -10,41 +10,47 @@ require("dotenv").config();
 
 //get index
 exports.index = (req, res) => {
-  async.parallel(
-    {
-      allUsers: callback => {
-        User.find({}, { _id: 0, __v: 0 }, callback).populate("messages");
+  console.log(req.user == undefined);
+  //console.log(req.user.id == );
+  if (req.user !== undefined) {
+    async.parallel(
+      {
+        allUsers: callback => {
+          User.find({}, { _id: 0, __v: 0 }, callback).populate("messages");
+        },
+        allMessages: callback => {
+          Messages.find({}, { _id: 0, __v: 0 }, callback)
+            .populate("author")
+            .populate("likes");
+        },
+        id: callback => {
+          Messages.find({}, callback)
+            .populate("author")
+            .populate("likes");
+        },
+        comments: callback => {
+          Comments.find({}, callback);
+        },
+        likes: callback => {
+          Likes.find({}, callback);
+        }
       },
-      allMessages: callback => {
-        Messages.find({}, { _id: 0, __v: 0 }, callback)
-          .populate("author")
-          .populate("likes");
-      },
-      id: callback => {
-        Messages.find({}, callback)
-          .populate("author")
-          .populate("likes");
-      },
-      comments: callback => {
-        Comments.find({}, callback);
-      },
-      likes: callback => {
-        Likes.find({}, callback);
-      }
-    },
 
-    (err, results) => {
-      console.log(results.likes.likes);
-      if (err) throw err;
-      res.render("index", {
-        data: results,
-        messageid: results.id,
-        user: req.user,
-        title: "Message Board",
-        likes: results.likes.likes
-      });
-    }
-  );
+      (err, results) => {
+        console.log(results.id);
+        if (err) throw err;
+        res.render("index", {
+          data: results,
+          messageid: results.id,
+          user: req.user,
+          title: "Message Board",
+          likes: results.likes.likes
+        });
+      }
+    );
+  } else {
+    res.redirect("/catalog/login");
+  }
 };
 
 //Get Sign up page
