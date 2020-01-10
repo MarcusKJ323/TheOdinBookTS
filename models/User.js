@@ -18,7 +18,7 @@ const UserSchema = new Schema({
     min: 2,
     max: 15
   },
-  password: { type: String, min: 6 },
+  password: { type: String, min: 6, required: true },
   messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
   friend: [{ type: Schema.Types.ObjectId, ref: "Friend" }],
   likes: [{ type: Schema.Types.ObjectId, ref: "Like" }]

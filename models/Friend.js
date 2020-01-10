@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 //Create the Friends model
-const FriendsScheama = new Schema({
+const FriendScheama = new Schema({
   requester: { type: Schema.Types.ObjectId, ref: "User" },
   recipient: { type: Schema.Types.ObjectId, ref: "User" },
   status: {
@@ -14,5 +14,9 @@ const FriendsScheama = new Schema({
       3 //friends
     ]
   }
+});
+
+FriendScheama.virtual("url").get(() => {
+  return `${this._id}`;
 });
 module.exports = mongoose.model("Friend", FriendScheama);

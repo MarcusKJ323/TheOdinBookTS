@@ -33,9 +33,13 @@ router.post(
   })
 );
 
+router.post("/friend", friend_controller.friend_post);
+
 router.get("/:id/newmsg", message_controller.newmsg_get);
 
 router.post("/:id/newmsg", message_controller.newmsg_post);
+
+//router.post("/upload", index_controller.upload_post);
 
 router.post("/comment/:id", comment_controller.newcom_post);
 

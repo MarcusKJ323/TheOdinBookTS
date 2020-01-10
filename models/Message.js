@@ -8,7 +8,7 @@ const MessageSchema = new Schema({
   timeStamp: { type: Date, default: Date.now },
   content: { type: String, max: 500 },
   author: { type: Schema.Types.ObjectId, ref: "User" },
-  likes: { type: Schema.Types.ObjectId, ref: "Like" },
+  likes: { type: Number, default: 0 },
   comment: { type: Schema.Types.ObjectId, ref: "Comment" }
 });
 

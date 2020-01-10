@@ -1,0 +1,10 @@
+p Want to add some Friends?
+
+    each user in data.allUsers
+        if(user.id != currentUser.id)
+            p #{user.username} :
+            form(method="POST" action='/catalog/friend')
+                .form-group
+                    button.btn.btn-primary(type='text') Add Friend
+                    div(style="display:none")
+                        input#id.form-control(type='text' name="id" value=user._id)

@@ -1,16 +1,11 @@
-extends layout
+extends indexlayout
 
 block content
   h1= title
   
   p Welcome to #{title}
   //- p #{data.comments}
-  //- p #{data.id}
-  p #{currentUser.likes}
-  -console.log(currentUser)
-  
-
-  
+  //- p #{data.id}  
   each messages in data.id
       .list-group.mb-1
        .list-group-item.list-group-item-action.flex-column.align-items-start
@@ -18,31 +13,15 @@ block content
           h3.mb-1.text-info !{messages.title}
           p.mb-1 !{messages.content}
           small.text-info !{messages.author.username}
-          p #{messages.id}
-          if(currentUser)
-            //- -var results = 0
-            //- each val in currentUser.likes
-            //-   -console.log(val)
-            //-   if (val == messages.id)
-            //-     - const liked = true
-            //-     - console.log(liked)
-            //-   else
-            //-     - const liked = false
-            //-     - console.log(liked)
             form(method='POST' action=('/catalog/post/' +  messages.id + '/upvote'))
-              button.btn.btn-primary(type="text") Like
-            //- console.log(messages)
-            p #{messages.likes}
+              button.btn.btn-primary(type="text") Like #{messages.likes}
             form(method='POST' action=('/catalog/comment/' + messages.id))
               .form-group
                 label(for="comment") Comment: 
                 input#comment.form-control(type="text", placeholder="Your comment" name="comment" value=(undefined===comment ? "" : comment.comment))
               button.btn.btn-success(type="submit") Sumbit
-          else
-            p you need to be loged in to write a comment
           each comment in data.comments
             if (comment.to == messages.id)
               p #{comment.comment}
               //- p #{comment.date}
         small.text.info !{messages.date}
-  

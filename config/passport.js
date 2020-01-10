@@ -10,14 +10,16 @@ passport.use(
       if (!user) {
         return done(null, false, { msg: "Incorrect Username" });
       } else {
-        bcrypt.compare("secretpassword", user.password, (err, res) => {
+        console.log(user.password);
+        console.log(password);
+        bcrypt.compare(password, user.password, (err, res) => {
+          console.log(res);
           if (res) {
             //passwords match
             return done(null, user);
           } else {
-            console.log(user.password);
             //passwords do not match
-            return done(err, false, { msg: "Incorrect password" });
+            return done(null, false, { msg: "Incorrect password" });
           }
         });
       }

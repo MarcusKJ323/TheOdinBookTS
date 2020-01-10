@@ -5,7 +5,11 @@ const Schema = mongoose.Schema;
 const LikeSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "User" },
   post: { type: Schema.Types.ObjectId, ref: "Comment" },
-  likes: { type: Number }
+  likes: { type: Number, default: 0 }
+});
+
+LikeSchema.virtual("url").get(() => {
+  return `${this._id}`;
 });
 
 module.exports = mongoose.model("Like", LikeSchema);
