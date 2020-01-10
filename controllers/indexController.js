@@ -10,34 +10,32 @@ require("dotenv").config();
 
 //get index
 exports.index = (req, res) => {
-  console.log(req.user == undefined);
-  //console.log(req.user.id == );
   if (req.user !== undefined) {
     async.parallel(
       {
         allUsers: callback => {
-          User.find({}, { _id: 0, __v: 0 }, callback).populate("messages");
+          User.find({}, { __v: 0 }, callback).populate("messages");
         },
         allMessages: callback => {
-          Messages.find({}, { _id: 0, __v: 0 }, callback)
-            .populate("author")
-            .populate("likes");
+          Messages.find({}, { _id: 0, __v: 0 }, callback).populate("author");
         },
         id: callback => {
           Messages.find({}, callback)
             .populate("author")
-            .populate("likes");
+            .sort({ timeStamp: -1 });
         },
         comments: callback => {
           Comments.find({}, callback);
         },
         likes: callback => {
-          Likes.find({}, callback);
+          Likes.find({}, callback)
+            .populate("post")
+            .populate("author");
         }
       },
 
       (err, results) => {
-        console.log(results.id);
+        // console.log(results.Likes);
         if (err) throw err;
         res.render("index", {
           data: results,
@@ -120,13 +118,13 @@ exports.signup_post = [
         if (user) {
           res.render("index", { title: "User does already exits" });
         } else {
-          bcrypt.hash("secretpassword", 10, (err, hashedpassword) => {
+          bcrypt.hash(req.body.password, 10, (err, hash) => {
             if (err) throw err;
             const user = new User({
               firstname: req.body.firstname,
               lastname: req.body.lastname,
               username: req.body.username,
-              password: hashedpassword
+              password: hash
             });
             user.save(err => {
               if (err) {
@@ -146,12 +144,7 @@ exports.login_get = (req, res) => {
   res.render("login", { title: "loign" });
 };
 
-//exports.login_post = () => {
-//  passport.authenticate("local"), () => {};
-//  return res.render("index");
-//};
-
-//get for profile
+//post for profile
 exports.profile_get = (req, res, next) => {
   async.parallel(
     {
@@ -161,7 +154,11 @@ exports.profile_get = (req, res, next) => {
           .exec(callback);
       },
       msg: function(callback) {
-        Messages.find({ author: req.params.id }, { _id: 0, __v: 0 }, callback);
+        Messages.find(
+          { author: req.params.id },
+          { _id: 0, __v: 0 },
+          callback
+        ).sort({ timeStamp: -1 });
       },
       msg_count: function(callback) {
         Messages.countDocuments({ author: req.params.id }, callback);

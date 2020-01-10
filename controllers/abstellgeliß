@@ -29,10 +29,12 @@ exports.friend_post = [
               return next(err);
             }
           });
-        } else {
-          if (results.Friend[0].recipient == req.user.id) {
+        }else{
+          if (results.Friend[0].recipient == req.user.id){
+            
           }
         }
+        
 
         User.findByIdAndUpdate(
           req.user.id,
