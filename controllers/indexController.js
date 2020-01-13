@@ -1,9 +1,9 @@
 const { check, validationResult, sanitizeBody } = require("express-validator");
 const User = require("../models/User");
+const Friend = require("../models/Friend");
 const Messages = require("../models/Message");
 const Comments = require("../models/Comment");
 const Likes = require("../models/Like");
-const express = require("express");
 const bcrypt = require("bcryptjs");
 const async = require("async");
 require("dotenv").config();
@@ -31,6 +31,16 @@ exports.index = (req, res) => {
           Likes.find({}, callback)
             .populate("post")
             .populate("author");
+        },
+        Friendsreq: callback => {
+          Friend.find({ recipient: req.user.id }, callback).populate(
+            "requester"
+          );
+        },
+        Friendpend: callback => {
+          Friend.find({ requester: req.user.id, status: 2 }, callback).populate(
+            "recipient"
+          );
         }
       },
 

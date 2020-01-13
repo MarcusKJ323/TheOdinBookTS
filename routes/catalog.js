@@ -33,6 +33,8 @@ router.post(
   })
 );
 
+router.post("/accept", friend_controller.accept_post);
+
 router.post("/friend", friend_controller.friend_post);
 
 router.get("/:id/newmsg", message_controller.newmsg_get);

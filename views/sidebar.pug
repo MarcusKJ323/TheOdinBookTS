@@ -1,4 +1,5 @@
-p Want to add some Friends?
+p 
+    strong Want to add some Friends?
 
     each user in data.allUsers
         if(user.id != currentUser.id)
@@ -8,3 +9,26 @@ p Want to add some Friends?
                     button.btn.btn-primary(type='text') Add Friend
                     div(style="display:none")
                         input#id.form-control(type='text' name="id" value=user._id)
+p
+    strong People that send you a FR
+
+    each user in data.Friendsreq
+        if (user.status != 3)
+            p #{user.requester.username} :
+            form(method="POST" action='/catalog/accept')
+                .form-group
+                    button.btn.btn-primary(type='text') Accept Friend
+                    div(style="display:none")
+                        input#id.form-control(type='text' name="acceptid" value=user.requester._id)
+        else           
+p 
+    strong People you send a FR
+    each user in data.Friendpend
+        p #{user.recipient.username}
+
+
+p
+    strong People that you are friend with 
+    each user in data.Friendsreq
+        if (user.status == 3)
+            p #{user.requester.username}
