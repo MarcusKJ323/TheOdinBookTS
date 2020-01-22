@@ -8,6 +8,7 @@ const LikeSchema = new Schema({
   likes: { type: Number, default: 0 }
 });
 
+//virtuals
 LikeSchema.virtual("url").get(() => {
   return `${this._id}`;
 });

@@ -3,7 +3,6 @@ const User = require("../models/User");
 const Friend = require("../models/Friend");
 const Messages = require("../models/Message");
 const Comments = require("../models/Comment");
-const Likes = require("../models/Like");
 const bcrypt = require("bcryptjs");
 const async = require("async");
 require("dotenv").config();
@@ -11,26 +10,19 @@ require("dotenv").config();
 //get index
 exports.index = (req, res) => {
   if (req.user !== undefined) {
+    //search every db after infromation that you want to display
     async.parallel(
       {
-        allUsers: callback => {
-          User.find({}, { __v: 0 }, callback).populate("messages");
+        notfrienduser: callback => {
+          User.find({ friend: { $nin: [req.user.id] } }, callback);
         },
-        allMessages: callback => {
-          Messages.find({}, { _id: 0, __v: 0 }, callback).populate("author");
-        },
-        id: callback => {
+        allmessages: callback => {
           Messages.find({}, callback)
             .populate("author")
             .sort({ timeStamp: -1 });
         },
         comments: callback => {
           Comments.find({}, callback);
-        },
-        likes: callback => {
-          Likes.find({}, callback)
-            .populate("post")
-            .populate("author");
         },
         Friendsreq: callback => {
           Friend.find({ recipient: req.user.id }, callback).populate(
@@ -45,14 +37,11 @@ exports.index = (req, res) => {
       },
 
       (err, results) => {
-        // console.log(results.Likes);
+        // renders the indexsite
         if (err) throw err;
         res.render("index", {
           data: results,
-          messageid: results.id,
-          user: req.user,
-          title: "Message Board",
-          likes: results.likes.likes
+          title: "Message Board"
         });
       }
     );
@@ -95,7 +84,7 @@ exports.signup_post = [
     .not()
     .isEmpty()
     .isLength({ min: 6, max: 50 }),
-
+  // custom check for if the passwords are the same
   check("passwordConfirm", "Passwords do not match")
     .not()
     .isEmpty()
@@ -128,6 +117,7 @@ exports.signup_post = [
         if (user) {
           res.render("index", { title: "User does already exits" });
         } else {
+          // hashedthe password whit bycrypt
           bcrypt.hash(req.body.password, 10, (err, hash) => {
             if (err) throw err;
             const user = new User({
@@ -140,6 +130,12 @@ exports.signup_post = [
               if (err) {
                 return next(err);
               }
+              User.findOneAndRemove(
+                { username: "Meier", firstname: "Meier" },
+                err => {
+                  if (err) throw err;
+                }
+              );
               res.redirect("/");
             });
           });
@@ -151,50 +147,101 @@ exports.signup_post = [
 
 //Get Login page
 exports.login_get = (req, res) => {
-  res.render("login", { title: "loign" });
+  res.render("login", { title: "login" });
 };
 
-//post for profile
+//get for profile
 exports.profile_get = (req, res, next) => {
+  //search in db after info for profile
   async.parallel(
     {
-      user: function(callback) {
+      user: callback => {
         User.findById(req.params.id)
           .populate("messages")
           .exec(callback);
       },
-      msg: function(callback) {
-        Messages.find(
-          { author: req.params.id },
-          { _id: 0, __v: 0 },
-          callback
-        ).sort({ timeStamp: -1 });
+      msg: callback => {
+        Messages.find({ author: req.params.id }, { __v: 0 }, callback).sort({
+          timeStamp: -1
+        });
       },
-      msg_count: function(callback) {
+      msg_count: callback => {
         Messages.countDocuments({ author: req.params.id }, callback);
       }
     },
-    function(err, results) {
+    (err, results) => {
       if (err) {
         return next(err);
-      }
+      } //if no user found print errorr
       if (results.user == null) {
         //No results
         var err = new Error("User not found");
         err.status = 404;
         return next(err);
       }
-      // console.log(results.user);
       res.render("profile", {
         title: "Hello",
-        firstname: results.user.firstname,
-        lastname: results.user.lastname,
-        messages: results.user.messages,
-        username: results.user.username,
-        id: results.user._id,
         user: results.user,
         data: results
       });
     }
   );
 };
+
+exports.editprofile_get = (req, res, next) => {
+  async.parallel(
+    {
+      User: callback => {
+        User.findById(req.user.id, callback);
+      }
+    },
+    (err, results) => {
+      if (err) throw err;
+      res.render("editprofile", {
+        title: "Edit Profile",
+        firstname: results.User.firstname,
+        lastname: results.User.lastname,
+        username: results.User.username
+      });
+    }
+  );
+};
+
+exports.editprofile_post = [
+  check("firstname", "cant be empty")
+    .not()
+    .isEmpty()
+    .trim(),
+  check("lastname", "cant be empty")
+    .not()
+    .isEmpty()
+    .trim(),
+  check("username", "cant be empty")
+    .not()
+    .isEmpty()
+    .trim(),
+  sanitizeBody("*").escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.render("editprofile", {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        username: req.body.username
+      });
+    } else {
+      User.findByIdAndUpdate(
+        req.user.id,
+        {
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          username: req.body.username
+        },
+        (err, data) => {
+          if (err) throw err;
+        }
+      );
+      res.redirect("/catalog/profile/" + req.user.id);
+    }
+  }
+];

@@ -1,6 +1,7 @@
 doctype html
 html(lang='en')
   head
+    //- all includes
     title= title
     link(rel="icon", href="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/2000px-Adidas_Logo.svg.png")
     meta(charset='utf-8')
@@ -14,6 +15,7 @@ html(lang='en')
       div(class='row')
         div(class='col-sm-2')
           block sidebar
+            //- sidebar links
             div
               a(href="/") Home
             div
@@ -34,4 +36,5 @@ html(lang='en')
         div(class='col-sm-8')
           block content
         div(class='col-sm-2')
+            //-inlcude sidebar for friends
             include sidebar

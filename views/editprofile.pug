@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    h1= title
+
+    //- all the form for the login
+    form(method="POST" action="/catalog/" + currentUser.id + "/editprofile")
+        label.col-form-label.col-form-label-sm(for="firstname") Firstname
+        input#firstname.form-control(
+            type="text", name="firstname", required
+            value=firstname)
+        label.col-form-label.col-form-label-sm(for="lastname") Lastname
+        input#lastname.form-control(
+            type="text", name="lastname", required
+            value=lastname)
+        label.col-form-label.col-form-label-sm(for="username") Username
+        input#username.form-control(
+            type="text", name="username", required
+            value=username)
+        button(type="submit", class="btn btn-sm btn-info min-cont") Sign up

@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
+const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -9,7 +10,7 @@ const passport = require("passport");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
-
+//calls the mongodb connection
 require("./mongoConfig");
 
 const app = express();
@@ -18,8 +19,10 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
+//calls the passport
 require("./config/passport");
 
+//saves the login User information
 router.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   next();
@@ -32,10 +35,11 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.urlencoded({ extended: false }));
 
+//calls the Routes
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/catalog", catalogRouter);

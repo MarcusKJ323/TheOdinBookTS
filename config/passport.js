@@ -1,8 +1,10 @@
+//Dependencies
 const LocalStrategy = require("passport-local").Strategy;
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
+//Function for the authentication
 passport.use(
   new LocalStrategy((username, password, done) => {
     User.findOne({ username: username }, (err, user) => {
@@ -10,8 +12,7 @@ passport.use(
       if (!user) {
         return done(null, false, { msg: "Incorrect Username" });
       } else {
-        console.log(user.password);
-        console.log(password);
+        //compares the enterd password with the encrypted one
         bcrypt.compare(password, user.password, (err, res) => {
           console.log(res);
           if (res) {
@@ -26,7 +27,7 @@ passport.use(
     });
   })
 );
-
+//for the Cookie
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });

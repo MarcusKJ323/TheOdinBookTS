@@ -1,10 +1,10 @@
 extends layout
 
 block content
-    h1= title
+    h1= head
 
-
-    form(method="post" action="")
+    //-from for new message
+    form(method="POST" action="")
         .form-group
             label(for="title") Title:
             input#title.form-control( type="text", placeholder="Title" name="title" required="true" value=(undefined===message ? "" : message.title))

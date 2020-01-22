@@ -1,15 +1,12 @@
-const { check, validationResult, sanitizeBody } = require("express-validator");
 const User = require("../models/User");
 const Messages = require("../models/Message");
-const Comments = require("../models/Comment");
 const Likes = require("../models/Like");
-const express = require("express");
-const bcrypt = require("bcryptjs");
 const async = require("async");
 var count = 0;
 
 exports.like_post = [
   (req, res, next) => {
+    //search in db for information you need for the likes
     async.parallel(
       {
         message: callback => {
@@ -23,18 +20,18 @@ exports.like_post = [
         }
       },
       (err, results) => {
+        //checks if user already liked the post
         results.liker.forEach(element => {
           if (element.post == req.params.id) {
             count = 0;
             req.user.likes.forEach(like => {
-              console.log(like == req.params.id);
               if (like == req.params.id) {
                 count++;
               }
             });
             if (count >= 1) {
             } else {
-              console.log(element);
+              //if user didn't like update likes
               Likes.findByIdAndUpdate(
                 element._id,
                 { $inc: { likes: 1 } },
@@ -42,6 +39,7 @@ exports.like_post = [
                   if (err) throw err;
                 }
               );
+              //same with Messages
               Messages.findByIdAndUpdate(
                 element.post,
                 { $inc: { likes: 1 } },
@@ -49,6 +47,7 @@ exports.like_post = [
                   if (err) throw err;
                 }
               );
+              //push like in likes
               User.findByIdAndUpdate(
                 req.user.id,
                 { $push: { likes: req.params.id } },
@@ -57,7 +56,6 @@ exports.like_post = [
                 }
               );
             }
-            console.log(element);
           }
         });
         if (err) return next(err);
