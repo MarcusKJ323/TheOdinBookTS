@@ -14,7 +14,6 @@ passport.use(
       } else {
         //compares the enterd password with the encrypted one
         bcrypt.compare(password, user.password, (err, res) => {
-          console.log(res);
           if (res) {
             //passwords match
             return done(null, user);

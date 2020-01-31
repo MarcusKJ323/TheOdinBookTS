@@ -5,6 +5,7 @@ const Messages = require("../models/Message");
 const Comments = require("../models/Comment");
 const bcrypt = require("bcryptjs");
 const async = require("async");
+const multer = require("multer");
 require("dotenv").config();
 
 //get index
@@ -222,6 +223,7 @@ exports.editprofile_post = [
     .trim(),
   sanitizeBody("*").escape(),
   (req, res, next) => {
+    console.log(req.file);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.render("editprofile", {

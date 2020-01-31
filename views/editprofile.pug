@@ -4,7 +4,7 @@ block content
     h1= title
 
     //- all the form for the login
-    form(method="POST" action="/catalog/" + currentUser.id + "/editprofile")
+    form(method="POST" action="/catalog/" + currentUser.id + "/editprofile" enctype="multipart/form-data")
         label.col-form-label.col-form-label-sm(for="firstname") Firstname
         input#firstname.form-control(
             type="text", name="firstname", required
@@ -17,4 +17,8 @@ block content
         input#username.form-control(
             type="text", name="username", required
             value=username)
+        label.col-form-label.col-form-label-sm(for="pic") Upload pic
+        input#pic.form-control(
+            type="file" name="pic" 
+        )
         button(type="submit", class="btn btn-sm btn-info min-cont") Sign up

@@ -2,6 +2,8 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+const multer = require("multer");
+const upload = multer({ dest: "./public/images" });
 
 // includs the contollers
 const index_controller = require("../controllers/indexController");
@@ -61,7 +63,11 @@ router.post("/post/:id/upvote", like_controller.like_post);
 
 router.get("/:id/editprofile", index_controller.editprofile_get);
 
-router.post("/:id/editprofile", index_controller.editprofile_post);
+router.post(
+  "/:id/editprofile",
+  upload.single("pic"),
+  index_controller.editprofile_post
+);
 
 // get for the profile
 router.get("/profile/:id", index_controller.profile_get);
