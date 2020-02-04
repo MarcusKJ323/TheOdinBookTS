@@ -13,7 +13,7 @@ html(lang='en')
   body
     div(class='container-fluid')
       div(class='row')
-        div(class='col-sm-2')
+        div(class='col-sm-2 sticky')
           block sidebar
             //- sidebar links
             div
@@ -35,6 +35,6 @@ html(lang='en')
             
         div(class='col-sm-8')
           block content
-        div(class='col-sm-2')
+        div(class='col-sm-2 sticky')
             //-inlcude sidebar for friends
             include sidebar

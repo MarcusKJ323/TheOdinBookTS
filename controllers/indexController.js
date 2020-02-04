@@ -6,7 +6,6 @@ const Comments = require("../models/Comment");
 const bcrypt = require("bcryptjs");
 const async = require("async");
 const fs = require("fs");
-const multer = require("multer");
 const Image = require("../models/Image");
 require("dotenv").config();
 
@@ -36,13 +35,22 @@ exports.index = (req, res) => {
           Friend.find({ requester: req.user.id, status: 2 }, callback).populate(
             "recipient"
           );
+        },
+        Image: callback => {
+          Image.find({ author: req.user.id }, callback).populate("author");
         }
       },
 
       (err, results) => {
+        var avatar =
+          "data:" +
+          results.Image[0].data.Contenttype +
+          ";base64," +
+          results.Image[0].data.data;
         // renders the indexsite
         if (err) throw err;
         res.render("index", {
+          Image: avatar,
           data: results,
           title: "Message Board"
         });
