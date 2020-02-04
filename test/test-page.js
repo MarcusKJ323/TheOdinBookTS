@@ -15,7 +15,7 @@ describe("Login test", () => {
   it("should redirect to /catalog", done => {
     request("http://localhost:3000")
       .post("/catalog/login")
-      .send({ username: "someusername", password: "123456" })
+      .send({ username: "username", password: "123456" })
       .expect("Location", "/catalog")
       .end(done);
   });
@@ -39,7 +39,7 @@ describe("Profile test + Message test + like test", () => {
   it("login redirect to /catalog", done => {
     request("http://localhost:3000")
       .post("/catalog/login")
-      .send({ username: "someusername", password: "123456" })
+      .send({ username: "username", password: "123456" })
       .expect("Location", "/catalog")
       .end(done);
   });

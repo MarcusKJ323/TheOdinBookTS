@@ -307,7 +307,7 @@ exports.editprofile_post = [
             }
           );
           // res.redirect("/catalog/profile/" + req.user.id);
-          res.redirect("/catalog");
+          res.redirect("/");
         }
       }
     );
