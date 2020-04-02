@@ -1,0 +1,41 @@
+img(class="sidebarimg" src=Image)
+p #{data.Image[0].author.username}
+
+p
+    //- people you can add
+    strong Want to add some Friends?
+    //-each friend in
+    each user in data.notfrienduser
+        if user.id != currentUser.id
+            p #{user.username} :
+                //-  form with id from user
+                form(method="POST" action='/catalog/friend')
+                    .form-group
+                        button.btn.btn-primary(type='text') Add Friend
+                        div(style="display:none")
+                            input#id.form-control(type='text' name="id" value=user._id)
+p
+    //- people that send you a FR
+    strong People that send you a FR
+    each user in data.Friendsreq
+        if (user.status != 3)
+            p #{user.requester.username} :
+            //- from with id form requester
+            form(method="POST" action='/catalog/accept')
+                .form-group
+                    button.btn.btn-primary(type='text') Accept Friend
+                    div(style="display:none")
+                        input#id.form-control(type='text' name="acceptid" value=user.requester._id)           
+p 
+    strong People you send a FR
+    each user in data.Friendpend
+        //- user you send a FR
+        p #{user.recipient.username}
+
+
+p
+    strong People that you are friend with 
+    //- People you are friend with
+    each user in data.Friendsreq
+        if (user.status == 3)
+            p #{user.requester.username}

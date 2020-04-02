@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1= head
+
+    //-from for new message
+    form(method="post" action="/catalog/"+ data.message.id + "/msgupdate")
+        .form-group
+            label(for="title") Title:
+            input#title.form-control( type="text", placeholder="Title" name="title" required="true" value=title)
+        .form-group
+            label(for="content") Content:
+            input#content.form-control(type="text" placeholder="content" name="content" required="true" value=content)
+
+        button.btn.btn-primary(type="submit") Submit

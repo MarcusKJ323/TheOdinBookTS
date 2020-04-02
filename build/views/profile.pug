@@ -1,0 +1,26 @@
+extends layout
+
+
+block content
+    //- -console.log(Image)
+    h1 Hallo #{user.firstname}
+    img(class="Image" src=Image)
+    .user-detail
+      p Your Name:  #{user.firstname + " " + user.lastname}
+      p Your Username: #{user.username}
+      p You wrote #{data.msg_count} Messages
+    a.btn.btn-primary(href="/catalog/" + currentUser.id + "/newmsg") New MSG
+    a.btn.btn-danger(href="/catalog/" + currentUser.id + "/editprofile") Edit profile
+
+
+    //- your messages
+    p #[strong Your last messages]
+        each messages in data.msg
+          .list-group.mb-1
+            .list-group-item.list-group-item-action.flex-column.align-items-start
+              .d-flex.w-100.justify-content-between
+                h5.mb-1.text-info !{messages.title}
+                p.mb-1 !{messages.content}
+                small.text-info !{messages.date}
+                a(href="/catalog/" + messages.id + "/msgupdate") Update message
+              small.text-muted You created this message
